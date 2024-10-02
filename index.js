@@ -3,13 +3,13 @@ const testData = [];
 const startDate = new Date("2022-01-01T00:00:00");
 const endDate = new Date(); // Today's date
 
-for (let dt = startDate; dt <= endDate; dt.setMinutes(dt.getMinutes() + 15)) {
+for (let dt = startDate; dt <= endDate; dt.setMinutes(dt.getMinutes() + 30)) {
     testData.push({ x: new Date(dt), y: Math.floor(Math.random() * 10) + 1 });
 }
 
 const data = {
     datasets: [{
-        label: 'Weekly Sales',
+        label: 'Verbrauch',
         data: testData,
         backgroundColor: [
             'rgba(255, 26, 104, 0.2)',
@@ -24,7 +24,20 @@ const data = {
             'rgba(255, 26, 104, 1)',
         ],
         borderWidth: 1
-    }]
+    },{
+        label: "Einspeisung",
+        data: [],
+        backgroundColor: [
+            "rgba(0, 255, 0, 0.2)"
+        ],
+        borderColor: [
+            'rgba(0, 255, 0, 1)',
+
+        ],
+        borderWidth: 1
+
+    }
+    ]
 };
 
 // config
