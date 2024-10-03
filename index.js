@@ -1,16 +1,24 @@
 // setup
-const testData = [];
-const startDate = new Date("2022-01-01T00:00:00");
-const endDate = new Date(); // Today's date
+const id742Usage = [];
 
-for (let dt = startDate; dt <= endDate; dt.setMinutes(dt.getMinutes() + 30)) {
-    testData.push({ x: new Date(dt), y: Math.floor(Math.random() * 10) + 1 });
-}
+fetch('./output.json')
+    .then(response => response.json())
+    .then(data => {
+        data.ID742.data.forEach(item => {
+            id742Usage.push({ x: item.ts, y: item.usage });
+        });
 
+        // Now that the data is fetched, update the chart
+        myChart.data.datasets[0].data = id742Usage;
+        myChart.update(); // Update the chart to reflect new data
+    })
+    .catch(error => console.error('Error fetching JSON:', error));
+
+// Config for the chart
 const data = {
     datasets: [{
         label: 'Verbrauch',
-        data: testData,
+        data: [], // Initially empty; will be updated later
         backgroundColor: [
             'rgba(255, 26, 104, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -36,8 +44,7 @@ const data = {
         ],
         borderWidth: 1
 
-    }
-    ]
+    }]
 };
 
 // config
@@ -49,12 +56,12 @@ const config = {
             x: {
                 type: "time",
                 time: {
-                    unit: "day"
+                    unit: "year"
                 }
             },
             y: {
                 min: 0,
-                max: 20
+                max: 350
             }
         }
     }
@@ -66,39 +73,56 @@ const myChart = new Chart(
     config
 );
 
+function getNewestDate() {
+    let newest = undefined
+    id742Usage.forEach(item => {
+        const currentDate = new Date(item.x)
+        if (newest === undefined || new Date(item.x) > newest) {
+            newest = currentDate
+        }
+    });
+    return newest
+}
+
 function dateFilter(unit) {
-    myChart.config.options.scales.x.time.unit = unit
+    const newestDate = getNewestDate()
     if (unit === "hour") {
-        const prevHour = new Date(new Date().setHours(new Date().getHours() - 1));
+// Create a copy of newestDate before modifying it
+        const prevHour = new Date(newestDate.getTime())
+        prevHour.setHours(prevHour.getHours() - 1)
         myChart.config.options.scales.x.time.unit = "minute"
         myChart.config.options.scales.x.min = prevHour
-        myChart.config.options.scales.x.max = new Date()
-        myChart.update()
-    }
-    else if (unit === "day") {
-        const yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
+        myChart.config.options.scales.x.max = newestDate
+        myChart.update();
+    } else if (unit === "day") {
+        const yesterday = new Date(newestDate.getTime())
+        yesterday.setDate(yesterday.getDate() - 1)
         myChart.config.options.scales.x.time.unit = "hour"
         myChart.config.options.scales.x.min = yesterday
-        myChart.config.options.scales.x.max = new Date()
-        myChart.update()
-    }
-    else if (unit === "month") {
-        const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1));
+        myChart.config.options.scales.x.max = newestDate
+    } else if (unit === "month") {
+        const lastMonth = new Date(newestDate.getTime())
+        lastMonth.setMonth(lastMonth.getMonth() - 1)
         myChart.config.options.scales.x.time.unit = "day"
+        console.log(lastMonth)
+        console.log(newestDate)
         myChart.config.options.scales.x.min = lastMonth
-        myChart.config.options.scales.x.max = new Date()
-        myChart.update()
-    }
-    else if (unit === "year") {
-        const lastYear = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+        myChart.config.options.scales.x.max = newestDate
+    } else if (unit === "year") {
+        const lastYear = new Date(newestDate.getTime())
+        lastYear.setFullYear(lastYear.getFullYear() - 1)
         myChart.config.options.scales.x.time.unit = "year"
         myChart.config.options.scales.x.min = lastYear
-        myChart.config.options.scales.x.max = new Date()
-        myChart.update()
+        myChart.config.options.scales.x.max = newestDate
+    }
+    else if (unit === "max") {
+        myChart.config.options.scales.x.time.unit = "year"
+        myChart.config.options.scales.x.min = undefined
+        myChart.config.options.scales.x.max = undefined
     }
     myChart.update()
 }
 
-// Instantly assign Chart.js version
+// Assign Chart.js version
 const chartVersion = document.getElementById('chartVersion');
 //chartVersion.innerText = Chart.version;
