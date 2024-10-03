@@ -14,6 +14,9 @@ fetch('./output.json')
 
         myChart.data.datasets[0].data = id742Usage
         myChart.data.datasets[1].data = id735Usage
+
+        dateFilter("month", 1)
+
         myChart.update();
     })
     .catch(error => console.error('Error fetching JSON:', error));
