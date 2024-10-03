@@ -126,6 +126,3 @@ function dateFilter(unit, targetChart) {
     target.update()
 }
 
-// Assign Chart.js version
-const chartVersion = document.getElementById('chartVersion');
-//chartVersion.innerText = Chart.version;

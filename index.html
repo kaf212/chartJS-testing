@@ -3,76 +3,55 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-      * {
-          margin: 0;
-          padding: 0;
-          font-family: sans-serif;
-      }
-      .chartMenu {
-          height: 40px;
-          background: #1A1A1A;
-          color: rgba(54, 162, 235, 1);
-      }
-      .chartMenu p {
-          padding: 10px;
-          font-size: 20px;
-      }
-      .chartCard {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-      }
-      .chartBox {
-          width: 500px;
-          padding: 20px;
-          border-radius: 20px;
-          border: solid 3px rgba(54, 162, 235, 1);
-          background: white;
-      }
+  <link rel='stylesheet' href='./style.css'>
 
-      .chart-container {
-          display: flex;
-          width: 100vw;
-          justify-content: space-evenly;
-          padding: 50px 0 50px 0;
-
-      }
-  </style>
 </head>
+
 <body>
-
 <div class='chart-container'>
-<div class="chartCard">
-  <div class="chartBox">
-    <canvas id="myChart"></canvas>
-    <button onclick='dateFilter("hour", 1)'>Hour</button>
-    <button onclick='dateFilter("day", 1)'>Day</button>
-    <button onclick='dateFilter("month", 1)'>Month</button>
-    <button onclick='dateFilter("year", 1)'>Year</button>
-    <button onclick='dateFilter("max", 1)'>All time</button>
-
+  <div class="chartCard">
+    <div class="chartBox">
+      <canvas id="myChart"></canvas>
+      <div class='button-container'>
+        <div class='button-wrapper'>
+          <button class="chart-button" onclick='dateFilter("hour", 1);'>Hour</button>
+          <button class="chart-button" onclick='dateFilter("day", 1)'>Day</button>
+          <button class="chart-button pressed" onclick='dateFilter("month", 1)'>Month</button>
+          <button class="chart-button" onclick='dateFilter("year", 1)'>Year</button>
+          <button class="chart-button" onclick='dateFilter("max", 1)'>All time</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-<div class="chartCard">
-  <div class="chartBox">
-    <canvas id="myChart2"></canvas>
-    <button onclick='dateFilter("hour", 2)'>Hour</button>
-    <button onclick='dateFilter("day", 2)'>Day</button>
-    <button onclick='dateFilter("month", 2)'>Month</button>
-    <button onclick='dateFilter("year", 2)'>Year</button>
-    <button onclick='dateFilter("max", 2)'>All time</button>
-
+  <div class="chartCard">
+    <div class="chartBox">
+      <canvas id="myChart2"></canvas>
+      <div class='button-container'>
+        <div class='button-wrapper'>
+          <button class="chart-button" onclick='dateFilter("hour", 2)'>Hour</button>
+          <button class="chart-button" onclick='dateFilter("day", 2)'>Day</button>
+          <button class="chart-button pressed" onclick='dateFilter("month", 2)'>Month</button>
+          <button class="chart-button" onclick='dateFilter("year", 2)'>Year</button>
+          <button class="chart-button" onclick='dateFilter("max", 2)'>All time</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 </div>
 <script src='chart1.js' defer></script>
 <script src='chart2.js' defer></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
-<script>
-
+<script defer>
+    Array.from(document.getElementsByClassName("chart-button")).forEach(button => {
+        button.addEventListener("click", (event)=> {
+            Array.from(event.currentTarget.parentNode.children).forEach(buttonFromCurrentChart => {
+                buttonFromCurrentChart.classList.remove("pressed")
+            })
+            event.currentTarget.classList.add("pressed")
+        })
+    })
 </script>
 
 </body>
