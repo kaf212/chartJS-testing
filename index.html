@@ -41,15 +41,27 @@
 <div class="chartCard">
   <div class="chartBox">
     <canvas id="myChart"></canvas>
-    <button onclick='dateFilter("hour")'>Hour</button>
-    <button onclick='dateFilter("day")'>Day</button>
-    <button onclick='dateFilter("month")'>Month</button>
-    <button onclick='dateFilter("year")'>Year</button>
-    <button onclick='dateFilter("max")'>All time</button>
+    <button onclick='dateFilter("hour", 1)'>Hour</button>
+    <button onclick='dateFilter("day", 1)'>Day</button>
+    <button onclick='dateFilter("month", 1)'>Month</button>
+    <button onclick='dateFilter("year", 1)'>Year</button>
+    <button onclick='dateFilter("max", 1)'>All time</button>
 
   </div>
 </div>
-<script src='index.js' defer></script>
+<div class="chartCard">
+  <div class="chartBox">
+    <canvas id="myChart2"></canvas>
+    <button onclick='dateFilter("hour", 2)'>Hour</button>
+    <button onclick='dateFilter("day", 2)'>Day</button>
+    <button onclick='dateFilter("month", 2)'>Month</button>
+    <button onclick='dateFilter("year", 2)'>Year</button>
+    <button onclick='dateFilter("max", 2)'>All time</button>
+
+  </div>
+</div>
+<script src='chart1.js' defer></script>
+<script src='chart2.js' defer></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 

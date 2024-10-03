@@ -1,16 +1,20 @@
 // setup
-const id742Usage = [];
+const id742Usage = []
+const id735Usage = []
 
 fetch('./output.json')
     .then(response => response.json())
     .then(data => {
         data.ID742.data.forEach(item => {
             id742Usage.push({ x: item.ts, y: item.usage });
-        });
+        })
+        data.ID735.data.forEach(item => {
+            id735Usage.push({ x: item.ts, y: item.usage });
+        })
 
-        // Now that the data is fetched, update the chart
-        myChart.data.datasets[0].data = id742Usage;
-        myChart.update(); // Update the chart to reflect new data
+        myChart.data.datasets[0].data = id742Usage
+        myChart.data.datasets[1].data = id735Usage
+        myChart.update();
     })
     .catch(error => console.error('Error fetching JSON:', error));
 
@@ -20,13 +24,7 @@ const data = {
         label: 'Verbrauch',
         data: [], // Initially empty; will be updated later
         backgroundColor: [
-            'rgba(255, 26, 104, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(0, 0, 0, 0.2)'
+            'rgba(255, 26, 104, 0.2)'
         ],
         borderColor: [
             'rgba(255, 26, 104, 1)',
@@ -84,43 +82,45 @@ function getNewestDate() {
     return newest
 }
 
-function dateFilter(unit) {
+function dateFilter(unit, targetChart) {
     const newestDate = getNewestDate()
+    let target = myChart
+    if (targetChart === 2) {target = myChart2}
     if (unit === "hour") {
 // Create a copy of newestDate before modifying it
         const prevHour = new Date(newestDate.getTime())
         prevHour.setHours(prevHour.getHours() - 1)
-        myChart.config.options.scales.x.time.unit = "minute"
-        myChart.config.options.scales.x.min = prevHour
-        myChart.config.options.scales.x.max = newestDate
-        myChart.update();
+        target.config.options.scales.x.time.unit = "minute"
+        target.config.options.scales.x.min = prevHour
+        target.config.options.scales.x.max = newestDate
+        target.update();
     } else if (unit === "day") {
         const yesterday = new Date(newestDate.getTime())
         yesterday.setDate(yesterday.getDate() - 1)
-        myChart.config.options.scales.x.time.unit = "hour"
-        myChart.config.options.scales.x.min = yesterday
-        myChart.config.options.scales.x.max = newestDate
+        target.config.options.scales.x.time.unit = "hour"
+        target.config.options.scales.x.min = yesterday
+        target.config.options.scales.x.max = newestDate
     } else if (unit === "month") {
         const lastMonth = new Date(newestDate.getTime())
         lastMonth.setMonth(lastMonth.getMonth() - 1)
-        myChart.config.options.scales.x.time.unit = "day"
+        target.config.options.scales.x.time.unit = "day"
         console.log(lastMonth)
         console.log(newestDate)
-        myChart.config.options.scales.x.min = lastMonth
-        myChart.config.options.scales.x.max = newestDate
+        target.config.options.scales.x.min = lastMonth
+        target.config.options.scales.x.max = newestDate
     } else if (unit === "year") {
         const lastYear = new Date(newestDate.getTime())
         lastYear.setFullYear(lastYear.getFullYear() - 1)
-        myChart.config.options.scales.x.time.unit = "year"
-        myChart.config.options.scales.x.min = lastYear
-        myChart.config.options.scales.x.max = newestDate
+        target.config.options.scales.x.time.unit = "year"
+        target.config.options.scales.x.min = lastYear
+        target.config.options.scales.x.max = newestDate
     }
     else if (unit === "max") {
-        myChart.config.options.scales.x.time.unit = "year"
-        myChart.config.options.scales.x.min = undefined
-        myChart.config.options.scales.x.max = undefined
+        target.config.options.scales.x.time.unit = "year"
+        target.config.options.scales.x.min = undefined
+        target.config.options.scales.x.max = undefined
     }
-    myChart.update()
+    target.update()
 }
 
 // Assign Chart.js version
